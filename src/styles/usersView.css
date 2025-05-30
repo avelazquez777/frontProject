@@ -6,6 +6,15 @@
     padding: 2rem 0;
     position: relative;
   }
+
+  :root {
+    background: rgba(15, 23, 42, 0.8);
+  }
+
+  body {
+    background: rgba(15, 23, 42, 0.8);
+    overflow-x: hidden;
+  }
   
   .users-view::before {
     content: '';
@@ -47,7 +56,6 @@
     letter-spacing: -0.025em;
   }
   
-  /* Botón Agregar Usuario */
   .add-user-btn {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
@@ -85,7 +93,6 @@
     left: 100%;
   }
   
-  /* Tabla moderna */
   .modern-table {
     width: 100%;
     background: rgba(30, 41, 59, 0.5);
@@ -129,8 +136,7 @@
     border: none;
     font-size: 1rem;
   }
-  
-  /* Botones de acción */
+
   .action-buttons {
     display: flex;
     gap: 0.75rem;
@@ -175,7 +181,7 @@
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   }
   
-  /* Estados de carga y error */
+
   .loading-text, .error-text, .empty-text {
     text-align: center;
     padding: 3rem;

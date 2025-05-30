@@ -1,19 +1,23 @@
-/* Estilos globales para toda la aplicación */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
+
+  :root {
+    background: rgba(15, 23, 42, 0.8);
+  }
   
   body {
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0f172a;
+    background: rgba(15, 23, 42, 0.8);
     color: #e2e8f0;
     line-height: 1.6;
     overflow-x: hidden;
   }
   
-  /* Scrollbar personalizada */
+
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -31,14 +35,14 @@
     background: linear-gradient(135deg, #8b5cf6, #06b6d4);
   }
   
-  /* Container principal */
+
   .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
   }
   
-  /* Utilidades de flex */
+
   .p-d-flex {
     display: flex;
   }
@@ -55,7 +59,7 @@
     align-items: center;
   }
   
-  /* Utilidades de texto */
+
   .p-text-center {
     text-align: center;
   }
@@ -72,7 +76,7 @@
     color: #ef4444;
   }
   
-  /* Utilidades de espaciado */
+
   .p-mb-3 {
     margin-bottom: 1.5rem;
   }
@@ -89,14 +93,12 @@
     padding: 2rem;
   }
   
-  /* Sombras */
   .p-shadow-3 {
     box-shadow: 
       0 20px 40px rgba(0, 0, 0, 0.3),
       0 0 60px rgba(99, 102, 241, 0.15);
   }
   
-  /* Efectos de entrada para todas las páginas */
   @keyframes fadeInUp {
     from {
       opacity: 0;

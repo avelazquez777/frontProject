@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
+import { Button } from 'primereact/button';
+import { Message } from 'primereact/message';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import productsValidation from '../../utils/productsValidation';
 import productsService from '../../services/productsService';
+import '../../styles/productsForm.css';
 
 const ProductsForm = () => {
   const { id } = useParams();
@@ -11,11 +17,13 @@ const ProductsForm = () => {
     nombre: '',
     precio: ''
   });
+  const [loading, setLoading] = useState(false);
   
   useEffect(() => {
     if (isEditMode) {
       const fetchProduct = async () => {
         try {
+          setLoading(true);
           const response = await productsService.getById(id);
           console.log('este es el response:', response);
           const productData = response.data.data;
@@ -26,6 +34,8 @@ const ProductsForm = () => {
           });
         } catch (err) {
           console.error('Error al obtener producto:', err);
+        } finally {
+          setLoading(false);
         }
       };
       fetchProduct();
@@ -45,67 +55,105 @@ const ProductsForm = () => {
       console.error('Error al guardar producto:', error);
       setStatus('Error al guardar el producto. Inténtalo de nuevo.');
     } finally {
-      setSubmitting(false);
-      // Hace un redireccionamiento completo recargando la página
+      setSubmitting(false)
       window.location.href = '/productos';
     }
   };
 
+  if (loading) {
+    return (
+      <div className="form-view">
+        <div className="form-container p-text-center">
+          <ProgressSpinner 
+            style={{ width: '50px', height: '50px' }} 
+            strokeWidth="3" 
+            fill="transparent"
+            animationDuration=".5s"
+          />
+          <p style={{ marginTop: '1rem', color: '#8b5cf6' }}>Cargando producto...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">
-        {isEditMode ? 'Editar Producto' : 'Agregar Producto'}
-      </h2>
-      <Formik 
-        enableReinitialize
-        initialValues={initialValues}
-        validationSchema={productsValidation}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting, status }) => (
-          <Form className="space-y-4">
-            {status && (
-              <div className="text-red-500 text-sm mb-4">{status}</div>
-            )}
-            <div>
-              <label className="block text-sm font-medium">Nombre</label>
-              <Field 
-                name="nombre" 
-                type="text" 
-                className="mt-1 block w-full border px-3 py-2" 
+    <div className="form-view">
+      <div className="form-container">
+        <Link to="/productos" className="back-btn">
+          ← Volver a Productos
+        </Link>
+        
+        <h2 className="form-title">
+          {isEditMode ? '✏️ Editar Producto' : 'Agregar Producto'}
+        </h2>
+        
+        <Formik 
+          enableReinitialize
+          initialValues={initialValues}
+          validationSchema={productsValidation}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting, status, values, setFieldValue, errors, touched }) => (
+            <Form className="modern-form">
+              {status && (
+                <Message 
+                  severity="error" 
+                  text={status}
+                  className="form-status-error"
+                  style={{ width: '100%', marginBottom: '1rem' }}
+                />
+              )}
+              
+              <div className="form-field">
+                <label className="form-label">Nombre del Producto</label>
+                <InputText
+                  value={values.nombre}
+                  onChange={(e) => setFieldValue('nombre', e.target.value)}
+                  placeholder="Ingrese el nombre del producto"
+                  className={`form-input ${errors.nombre && touched.nombre ? 'p-invalid' : ''}`}
+                />
+                <ErrorMessage 
+                  name="nombre" 
+                  component="div" 
+                  className="form-error" 
+                />
+              </div>
+              
+              <div className="form-field">
+                <label className="form-label">Precio</label>
+                <InputNumber
+                  value={values.precio}
+                  onValueChange={(e) => setFieldValue('precio', e.value)}
+                  placeholder="Ingrese el precio"
+                  mode="currency"
+                  currency="USD"
+                  locale="en-US"
+                  minFractionDigits={2}
+                  className={`form-input ${errors.precio && touched.precio ? 'p-invalid' : ''}`}
+                />
+                <ErrorMessage 
+                  name="precio" 
+                  component="div" 
+                  className="form-error" 
+                />
+              </div>
+              
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="form-submit-btn"
+                label={
+                  isSubmitting 
+                    ? (isEditMode ? 'Actualizando...' : 'Creando...') 
+                    : (isEditMode ? 'Actualizar Producto' : 'Crear Producto')
+                }
+                icon={isSubmitting ? 'pi pi-spin pi-spinner' : (isEditMode ? 'pi pi-check' : 'pi pi-plus')}
+                loading={isSubmitting}
               />
-              <ErrorMessage 
-                name="nombre" 
-                component="div" 
-                className="text-red-500 text-sm" 
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Precio</label>
-              <Field 
-                name="precio" 
-                type="number" 
-                className="mt-1 block w-full border px-3 py-2" 
-              />
-              <ErrorMessage 
-                name="precio" 
-                component="div" 
-                className="text-red-500 text-sm" 
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
-            >
-              {isSubmitting 
-                ? (isEditMode ? 'Actualizando...' : 'Creando...') 
-                : (isEditMode ? 'Actualizar Producto' : 'Crear Producto')
-              }
-            </button>
-          </Form>
-        )}
-      </Formik>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };

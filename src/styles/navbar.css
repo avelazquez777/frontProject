@@ -1,6 +1,7 @@
 .navbar {
     background: linear-gradient(135deg, #0a0f2e 0%, #1a1a2e 50%, #16213e 100%);
     color: #ffffff;
+    max-width: 100%;
     padding: 1.5rem 0;
     border-bottom: 2px solid #6366f1;
     box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
@@ -9,6 +10,7 @@
     z-index: 1000;
     backdrop-filter: blur(10px);
   }
+
   
   .navbar-container {
     display: flex;
